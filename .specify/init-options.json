@@ -1,0 +1,10 @@
+{
+  "ai": "kilocode",
+  "branch_numbering": "sequential",
+  "context_file": ".kilocode/rules/specify-rules.md",
+  "here": false,
+  "integration": "kilocode",
+  "preset": null,
+  "script": "ps",
+  "speckit_version": "0.7.3"
+}
