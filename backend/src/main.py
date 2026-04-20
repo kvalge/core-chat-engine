@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .models.db import init_db
-from .api.routes import chat, projects, backends
+from .api.routes import chat, projects, backends, upload
 
 
 @asynccontextmanager
@@ -43,6 +43,7 @@ app.add_middleware(
 app.include_router(chat.router, prefix="/v1/chat", tags=["Chat"])
 app.include_router(projects.router, prefix="/api", tags=["Projects"])
 app.include_router(backends.router, prefix="/api", tags=["Backends"])
+app.include_router(upload.router, prefix="/api", tags=["Upload"])
 
 
 @app.get("/")

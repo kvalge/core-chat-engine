@@ -68,9 +68,9 @@ description: Task list for Core Chat Engine implementation
 - [X] T022 [P] [US1] Create Message component in frontend/src/components/Message.tsx (in Chat.tsx)
 - [X] T023 [US1] Implement message input in frontend/src/components/Input.tsx (in Chat.tsx)
 - [X] T024 [US1] Create chat state hook in frontend/src/hooks/useChat.ts (in Chat.tsx)
-- [ ] T025 [US1] Create SSE client in frontend/src/services/sse.ts
-- [ ] T026 [US1] Connect frontend to backend streaming in frontend/src/services/api.ts
-- [ ] T027 [US1] Create ChatPage in frontend/src/pages/ChatPage.tsx
+- [X] T025 [US1] Create SSE client in frontend/src/services/sse.ts
+- [X] T026 [US1] Connect frontend to backend streaming in frontend/src/services/api.ts
+- [X] T027 [US1] Create ChatPage in frontend/src/pages/ChatPage.tsx (integrated into App.tsx)
 
 **Checkpoint**: User Story 1 should be fully functional - users can chat and receive streaming responses
 
@@ -84,10 +84,10 @@ description: Task list for Core Chat Engine implementation
 
 ### Implementation for User Story 2
 
-- [ ] T028 [P] [US2] Implement OpenAI-compatible /v1/chat/completions endpoint in backend/src/api/routes/chat.py
-- [ ] T029 [P] [US2] Add streaming support to chat endpoint in backend/src/api/routes/chat.py
-- [ ] T030 [P] [US2] Create Ollama adapter in backend/src/services/ollama.py
-- [ ] T031 [US2] Add request/response format transformation in backend/src/services/llm.py
+- [X] T028 [P] [US2] Implement OpenAI-compatible /v1/chat/completions endpoint in backend/src/api/routes/chat.py
+- [X] T029 [P] [US2] Add streaming support to chat endpoint in backend/src/api/routes/chat.py
+- [X] T030 [P] [US2] Create Ollama adapter in backend/src/services/ollama.py
+- [X] T031 [US2] Add request/response format transformation in backend/src/services/llm.py
 
 **Checkpoint**: User Story 2 should be fully functional - API works with OpenAI-compatible requests
 
@@ -101,13 +101,13 @@ description: Task list for Core Chat Engine implementation
 
 ### Implementation for User Story 3
 
-- [ ] T032 [P] [US3] Create tool definitions in backend/src/services/tools.py
-- [ ] T033 [P] [US3] Implement date/time tool in backend/src/services/tools.py
-- [ ] T034 [P] [US3] Implement web search tool in backend/src/services/tools.py
-- [ ] T035 [P] [US3] Implement todo list tool in backend/src/services/tools.py
-- [ ] T036 [US3] Implement calendar events tool in backend/src/services/tools.py
-- [ ] T037 [US3] Add tool call parsing to chat service in backend/src/services/chat.py
-- [ ] T038 [US3] Implement tool execution loop in backend/src/services/chat.py
+- [X] T032 [P] [US3] Create tool definitions in backend/src/services/tools.py
+- [X] T033 [P] [US3] Implement date/time tool in backend/src/services/tools.py
+- [X] T034 [P] [US3] Implement web search tool in backend/src/services/tools.py
+- [X] T035 [P] [US3] Implement todo list tool in backend/src/services/tools.py
+- [X] T036 [US3] Implement calendar events tool in backend/src/services/tools.py
+- [X] T037 [US3] Add tool call parsing to chat service in backend/src/services/chat.py
+- [X] T038 [US3] Implement tool execution loop in backend/src/services/chat.py
 
 **Checkpoint**: User Story 3 should be fully functional - tools can be called and executed
 
@@ -121,11 +121,11 @@ description: Task list for Core Chat Engine implementation
 
 ### Implementation for User Story 4
 
-- [ ] T039 [P] [US4] Create projects API routes in backend/src/api/routes/projects.py
-- [ ] T040 [P] [US4] Implement project CRUD service in backend/src/services/project.py
-- [ ] T041 [P] [US4] Create Sidebar component in frontend/src/components/Sidebar.tsx
-- [ ] T042 [US4] Add project switching to chat state in frontend/src/hooks/useChat.ts
-- [ ] T043 [US4] Add project management UI in frontend/src/pages/SettingsPage.tsx
+- [X] T039 [P] [US4] Create projects API routes in backend/src/api/routes/projects.py
+- [X] T040 [P] [US4] Implement project CRUD service in backend/src/services/project.py
+- [X] T041 [P] [US4] Create Sidebar component in frontend/src/components/Sidebar.tsx
+- [X] T042 [US4] Add project switching to chat state in frontend/src/hooks/useChat.ts
+- [X] T043 [US4] Add project management UI in frontend/src/pages/SettingsPage.tsx
 
 **Checkpoint**: User Story 4 should be fully functional - multiple projects with independent configs
 
@@ -139,12 +139,12 @@ description: Task list for Core Chat Engine implementation
 
 ### Implementation for User Story 5
 
-- [ ] T044 [P] [US5] Implement file upload endpoint in backend/src/api/routes/upload.py
-- [ ] T045 [P] [US5] Create FileAttachment entity in backend/src/models/entities.py
-- [ ] T046 [P] [US5] Add vision model detection in backend/src/services/llm.py
-- [ ] T047 [US5] Add file upload to chat service in backend/src/services/chat.py
-- [ ] T048 [US5] Create FileUpload component in frontend/src/components/FileUpload.tsx
-- [ ] T049 [US5] Add error handling for non-vision models in frontend/src/components/FileUpload.tsx
+- [X] T044 [P] [US5] Implement file upload endpoint in backend/src/api/routes/upload.py
+- [X] T045 [P] [US5] Create FileAttachment entity in backend/src/models/entities.py
+- [X] T046 [P] [US5] Add vision model detection in backend/src/services/llm.py
+- [X] T047 [US5] Add file upload to chat service in backend/src/services/chat.py
+- [X] T048 [US5] Create FileUpload component in frontend/src/components/FileUpload.tsx
+- [X] T049 [US5] Add error handling for non-vision models in frontend/src/components/FileUpload.tsx
 
 **Checkpoint**: User Story 5 should be fully functional - file upload works with vision model check
 
@@ -158,11 +158,11 @@ description: Task list for Core Chat Engine implementation
 
 ### Implementation for User Story 6
 
-- [ ] T050 [P] [US6] Create backends API routes in backend/src/api/routes/backends.py
-- [ ] T051 [P] [US6] Implement backend CRUD service in backend/src/services/backend.py
-- [ ] T052 [P] [US6] Implement test connection functionality in backend/src/services/backend.py
-- [ ] T053 [US6] Create BackendConfig component in frontend/src/components/BackendConfig.tsx
-- [ ] T054 [US6] Add backend management to SettingsPage in frontend/src/pages/SettingsPage.tsx
+- [X] T050 [P] [US6] Create backends API routes in backend/src/api/routes/backends.py
+- [X] T051 [P] [US6] Implement backend CRUD service in backend/src/services/backend.py
+- [X] T052 [P] [US6] Implement test connection functionality in backend/src/services/backend.py
+- [X] T053 [US6] Create BackendConfig component in frontend/src/components/BackendConfig.tsx
+- [X] T054 [US6] Add backend management to SettingsPage in frontend/src/pages/SettingsPage.tsx
 
 **Checkpoint**: User Story 6 should be fully functional - backend configuration UI works
 
@@ -172,9 +172,9 @@ description: Task list for Core Chat Engine implementation
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T055 [P] Add error handling and logging across all services
-- [ ] T056 [P] Performance optimization for streaming latency
-- [ ] T057 Add database indexes in backend/src/models/db.py
+- [X] T055 [P] Add error handling and logging across all services
+- [X] T056 [P] Performance optimization for streaming latency
+- [X] T057 Add database indexes in backend/src/models/db.py
 - [ ] T058 Run quickstart.md validation
 - [ ] T059 Final integration testing
 
