@@ -22,12 +22,12 @@ description: Task list for Core Chat Engine implementation
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create backend directory structure in backend/src/
-- [ ] T002 Create frontend directory structure in frontend/src/
-- [ ] T003 Initialize Python project with FastAPI in backend/
-- [ ] T004 Initialize React 19 + TypeScript + Vite project in frontend/
-- [ ] T005 [P] Configure SQLite database in backend/src/models/db.py
-- [ ] T006 [P] Create environment template .env.example
+- [X] T001 Create backend directory structure in backend/src/
+- [X] T002 Create frontend directory structure in frontend/src/
+- [X] T003 Initialize Python project with FastAPI in backend/
+- [X] T004 Initialize React 19 + TypeScript + Vite project in frontend/
+- [X] T005 [P] Configure SQLite database in backend/src/models/db.py
+- [X] T006 [P] Create environment template .env.example
 
 ---
 
@@ -37,18 +37,18 @@ description: Task list for Core Chat Engine implementation
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 Create database schema and migrations in backend/src/models/
-- [ ] T008 [P] Implement Project entity in backend/src/models/entities.py
-- [ ] T009 [P] Implement Conversation entity in backend/src/models/entities.py
-- [ ] T010 [P] Implement Message entity in backend/src/models/entities.py
-- [ ] T011 [P] Implement Backend entity in backend/src/models/entities.py
-- [ ] T012 [P] Implement TodoItem entity in backend/src/models/entities.py
-- [ ] T013 Create Pydantic schemas in backend/src/models/schemas.py
-- [ ] T014 Setup FastAPI app in backend/src/main.py
-- [ ] T015 Configure CORS and middleware in backend/src/main.py
-- [ ] T016 Create API client service in backend/src/services/llm.py
-- [ ] T017 Create SSE streaming handler in backend/src/services/streaming.py
-- [ ] T018 Setup React routing in frontend/src/App.tsx
+- [X] T007 Create database schema and migrations in backend/src/models/
+- [X] T008 [P] Implement Project entity in backend/src/models/entities.py
+- [X] T009 [P] Implement Conversation entity in backend/src/models/entities.py
+- [X] T010 [P] Implement Message entity in backend/src/models/entities.py
+- [X] T011 [P] Implement Backend entity in backend/src/models/entities.py
+- [X] T012 [P] Implement TodoItem entity in backend/src/models/entities.py
+- [X] T013 Create Pydantic schemas in backend/src/models/schemas.py
+- [X] T014 Setup FastAPI app in backend/src/main.py
+- [X] T015 Configure CORS and middleware in backend/src/main.py
+- [X] T016 Create API client service in backend/src/services/llm.py
+- [X] T017 Create SSE streaming handler in backend/src/services/streaming.py
+- [X] T018 Setup React routing in frontend/src/App.tsx
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -62,12 +62,12 @@ description: Task list for Core Chat Engine implementation
 
 ### Implementation for User Story 1
 
-- [ ] T019 [P] [US1] Create chat API route in backend/src/api/routes/chat.py
-- [ ] T020 [P] [US1] Implement chat service in backend/src/services/chat.py
-- [ ] T021 [P] [US1] Create Chat component in frontend/src/components/Chat.tsx
-- [ ] T022 [P] [US1] Create Message component in frontend/src/components/Message.tsx
-- [ ] T023 [US1] Implement message input in frontend/src/components/Input.tsx
-- [ ] T024 [US1] Create chat state hook in frontend/src/hooks/useChat.ts
+- [X] T019 [P] [US1] Create chat API route in backend/src/api/routes/chat.py
+- [X] T020 [P] [US1] Implement chat service in backend/src/services/chat.py
+- [X] T021 [P] [US1] Create Chat component in frontend/src/components/Chat.tsx
+- [X] T022 [P] [US1] Create Message component in frontend/src/components/Message.tsx (in Chat.tsx)
+- [X] T023 [US1] Implement message input in frontend/src/components/Input.tsx (in Chat.tsx)
+- [X] T024 [US1] Create chat state hook in frontend/src/hooks/useChat.ts (in Chat.tsx)
 - [ ] T025 [US1] Create SSE client in frontend/src/services/sse.ts
 - [ ] T026 [US1] Connect frontend to backend streaming in frontend/src/services/api.ts
 - [ ] T027 [US1] Create ChatPage in frontend/src/pages/ChatPage.tsx
