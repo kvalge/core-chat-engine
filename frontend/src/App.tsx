@@ -7,12 +7,22 @@ type Page = "chat" | "settings";
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>("chat");
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-      <Sidebar onNavigate={setCurrentPage} currentPage={currentPage} />
+      <Sidebar
+        onNavigate={setCurrentPage}
+        currentPage={currentPage}
+        selectedProjectId={selectedProjectId}
+        onSelectProject={setSelectedProjectId}
+      />
       <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {currentPage === "chat" ? <Chat /> : <BackendConfig />}
+        {currentPage === "chat" ? (
+          <Chat projectId={selectedProjectId} />
+        ) : (
+          <BackendConfig />
+        )}
       </main>
     </div>
   );

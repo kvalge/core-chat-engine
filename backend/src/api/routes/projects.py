@@ -1,5 +1,6 @@
 """Projects API routes."""
 
+from datetime import datetime
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -14,6 +15,8 @@ from ...models.schemas import (
     ProjectResponse,
     ConversationCreate,
     ConversationResponse,
+    MessageAppend,
+    MessageResponse,
 )
 
 router = APIRouter()
@@ -126,6 +129,49 @@ async def create_conversation(
     return ConversationResponse.model_validate(db_conversation)
 
 
+@router.post(
+    "/conversations/{conversation_id}/messages",
+    response_model=MessageResponse,
+)
+async def append_message(
+    conversation_id: int,
+    body: MessageAppend,
+    db: AsyncSession = Depends(get_db),
+):
+    """Persist a single chat message."""
+    result = await db.execute(
+        select(Conversation).where(Conversation.id == conversation_id)
+    )
+    conversation = result.scalar_one_or_none()
+    if not conversation:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+
+    message = Message(
+        conversation_id=conversation_id,
+        role=body.role,
+        content=body.content,
+    )
+    if body.tool_calls is not None:
+        message.tool_calls_list = body.tool_calls
+    if body.tool_results is not None:
+        message.tool_results_list = body.tool_results
+
+    conversation.updated_at = datetime.utcnow()
+    db.add(message)
+    await db.commit()
+    await db.refresh(message)
+
+    return MessageResponse(
+        id=message.id,
+        conversation_id=message.conversation_id,
+        role=message.role,
+        content=message.content,
+        tool_calls=message.tool_calls_list if message.tool_calls else None,
+        tool_results=message.tool_results_list if message.tool_results else None,
+        created_at=message.created_at,
+    )
+
+
 @router.get("/conversations/{conversation_id}")
 async def get_conversation(conversation_id: int, db: AsyncSession = Depends(get_db)):
     """Get a conversation with its messages."""
@@ -157,3 +203,18 @@ async def get_conversation(conversation_id: int, db: AsyncSession = Depends(get_
             for m in messages
         ],
     }
+
+
+@router.delete("/conversations/{conversation_id}")
+async def delete_conversation(conversation_id: int, db: AsyncSession = Depends(get_db)):
+    """Delete a conversation and its messages."""
+    result = await db.execute(
+        select(Conversation).where(Conversation.id == conversation_id)
+    )
+    conversation = result.scalar_one_or_none()
+    if not conversation:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+
+    await db.delete(conversation)
+    await db.commit()
+    return {"deleted": True}

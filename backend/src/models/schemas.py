@@ -1,9 +1,10 @@
 """Pydantic schemas for request/response validation."""
 
+import json
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 # Project Schemas
@@ -13,7 +14,25 @@ class ProjectBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     system_prompt: str = ""
     default_model: str = "llama3.2"
-    enabled_tools: list[str] = []
+    enabled_tools: list[str] = Field(default_factory=list)
+
+    @field_validator("enabled_tools", mode="before")
+    @classmethod
+    def _coerce_enabled_tools(cls, v: object) -> list[str]:
+        """ORM stores JSON in a string column; coerce for responses."""
+        if isinstance(v, str):
+            if not v.strip():
+                return []
+            try:
+                parsed = json.loads(v)
+                return parsed if isinstance(parsed, list) else []
+            except json.JSONDecodeError:
+                return []
+        if v is None:
+            return []
+        if isinstance(v, list):
+            return [str(x) for x in v]
+        return []
 
 
 class ProjectCreate(ProjectBase):
@@ -43,10 +62,18 @@ class ProjectResponse(ProjectBase):
 
 # Conversation Schemas
 class ConversationCreate(BaseModel):
-    """Schema for creating a conversation."""
+    """Schema for creating a conversation (project comes from URL)."""
 
-    project_id: int
     title: str = Field(..., min_length=1, max_length=200)
+
+
+class MessageAppend(BaseModel):
+    """Append a message to a conversation."""
+
+    role: str = Field(..., pattern="^(user|assistant|system|tool)$")
+    content: str
+    tool_calls: Optional[list[dict]] = None
+    tool_results: Optional[list[dict]] = None
 
 
 class ConversationResponse(BaseModel):

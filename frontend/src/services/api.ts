@@ -149,6 +149,96 @@ export async function deleteProject(id: number): Promise<void> {
   if (!response.ok) throw new Error("Failed to delete project");
 }
 
+export async function getProject(id: number): Promise<Project> {
+  const response = await fetch(`/api/projects/${id}`);
+  if (!response.ok) throw new Error("Failed to fetch project");
+  return response.json();
+}
+
+export interface Conversation {
+  id: number;
+  project_id: number;
+  title: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface StoredMessage {
+  id: number;
+  role: string;
+  content: string;
+  tool_calls?: unknown;
+  tool_results?: unknown;
+  created_at: string;
+}
+
+export async function listConversations(projectId: number): Promise<Conversation[]> {
+  const response = await fetch(`/api/projects/${projectId}/conversations`);
+  if (!response.ok) throw new Error("Failed to list conversations");
+  return response.json();
+}
+
+export async function createConversation(
+  projectId: number,
+  title: string
+): Promise<Conversation> {
+  const response = await fetch(`/api/projects/${projectId}/conversations`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error((err as { detail?: string }).detail || "Failed to create conversation");
+  }
+  return response.json();
+}
+
+export async function getConversationDetail(
+  conversationId: number
+): Promise<{ conversation: Conversation; messages: StoredMessage[] }> {
+  const response = await fetch(`/api/conversations/${conversationId}`);
+  if (!response.ok) throw new Error("Failed to load conversation");
+  return response.json();
+}
+
+export async function appendMessage(
+  conversationId: number,
+  body: { role: string; content: string }
+): Promise<StoredMessage> {
+  const response = await fetch(`/api/conversations/${conversationId}/messages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error((err as { detail?: string }).detail || "Failed to save message");
+  }
+  return response.json();
+}
+
+export async function deleteConversation(conversationId: number): Promise<void> {
+  const response = await fetch(`/api/conversations/${conversationId}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error((err as { detail?: string }).detail || "Failed to delete conversation");
+  }
+}
+
+/** Title for a new chat: locale date + time (used for first chat and "New chat"). */
+export function newChatTitle(date: Date = new Date()): string {
+  return date.toLocaleString(undefined, {
+    dateStyle: "short",
+    timeStyle: "medium",
+  });
+}
+
+/** Ollama model tags commonly used locally (see project spec). */
+export const OLLAMA_LOCAL_MODELS = ["llama3.2", "mistral"] as const;
+
 // Backends API
 export interface Backend {
   id: number;
