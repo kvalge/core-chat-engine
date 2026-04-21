@@ -8,13 +8,13 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
-from ..models.schemas import (
+from ...models.schemas import (
     ChatCompletionRequest,
     ChatCompletion,
     ChatMessage,
 )
-from ..services.llm import create_client, is_vision_model
-from ..services.streaming import SSEHandler
+from ...services.llm import create_client, is_vision_model
+from ...services.streaming import SSEHandler
 
 router = APIRouter()
 

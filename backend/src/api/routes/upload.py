@@ -7,9 +7,9 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..models.db import get_db
-from ..models.entities import FileAttachment, Message
-from ..services.llm import is_vision_model
+from ...models.db import get_db
+from ...models.entities import FileAttachment, Message
+from ...services.llm import is_vision_model
 
 router = APIRouter()
 

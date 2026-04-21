@@ -1,13 +1,12 @@
 """SSE streaming handler - hand-rolled without SDKs."""
+
 import json
 from typing import AsyncGenerator
 
 from ..models.schemas import StreamChunk
 
 
-async def generate_sse(
-    content: str, chunk_size: int = 5
-) -> AsyncGenerator[str, None]:
+async def generate_sse(content: str, chunk_size: int = 5) -> AsyncGenerator[str, None]:
     """Generate SSE stream from content."""
     for i in range(0, len(content), chunk_size):
         chunk = content[i : i + chunk_size]
@@ -15,7 +14,7 @@ async def generate_sse(
         await _async_sleep(0.01)
 
     # Send done signal
-    yield "data: {'choices': [{'delta': {}, 'finish_reason': 'stop'}]}\n\n"
+    yield 'data: {"choices": [{"delta": {}, "finish_reason": "stop"}]}\n\n'
     yield "data: [DONE]\n\n"
 
 
@@ -41,8 +40,8 @@ class SSEHandler:
     def format_chunk(content: str, done: bool = False) -> str:
         """Format a chunk for SSE."""
         if done:
-            return f"data: {json.dumps({'choices': [{'delta': {}, 'finish_reason': 'stop'}]})}\n\n"
-        return f"data: {json.dumps({'choices': [{'delta': {'content': content}}])}\n\n"
+            return 'data: {"choices": [{"delta": {}, "finish_reason": "stop"}]}\n\n'
+        return f"data: {json.dumps({'choices': [{'delta': {'content': content}}]})}\n\n"
 
     @staticmethod
     def format_error(error: str) -> str:

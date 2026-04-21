@@ -6,9 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..models.db import get_db
-from ..models.entities import Project, Conversation, Message
-from ..models.schemas import (
+from ...models.db import get_db
+from ...models.entities import Project, Conversation, Message
+from ...models.schemas import (
     ProjectCreate,
     ProjectUpdate,
     ProjectResponse,
