@@ -40,7 +40,7 @@ async def upload_file(
 
     # Determine file type
     mime_type = file.content_type or "application/octet-stream"
-    file_type = ALLOWED_TYPES.get(mime_type, "text")
+    file_type = ALLOWED_TYPES.get(mime_type)
     if not file_type:
         raise HTTPException(
             status_code=400, detail=f"Unsupported file type: {mime_type}"

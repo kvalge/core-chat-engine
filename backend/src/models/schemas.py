@@ -113,13 +113,31 @@ class BackendUpdate(BaseModel):
     is_default: Optional[bool] = None
 
 
-class BackendResponse(BackendBase):
-    """Schema for backend response."""
+class BackendResponse(BaseModel):
+    """Schema for backend response - api_key is redacted."""
 
     id: int
+    name: str
+    base_url: str
+    api_key_set: bool = False  # Redacted: true if key is set
+    models: list[str] = []
+    is_default: bool = False
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+    @classmethod
+    def from_entity(cls, entity: "Backend") -> "BackendResponse":
+        """Create response from entity, redacting api_key."""
+        return cls(
+            id=entity.id,
+            name=entity.name,
+            base_url=entity.base_url,
+            api_key_set=bool(entity.api_key),
+            models=entity.models_list,
+            is_default=entity.is_default,
+            created_at=entity.created_at,
+        )
 
 
 class BackendTestResponse(BaseModel):

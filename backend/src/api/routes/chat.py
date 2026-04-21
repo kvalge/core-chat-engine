@@ -9,6 +9,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
 from ...models.schemas import (
+    ChatChoice,
     ChatCompletionRequest,
     ChatCompletion,
     ChatMessage,
@@ -28,7 +29,7 @@ def get_default_client() -> tuple:
     """Get default LLM client configuration."""
     import os
 
-    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
     model = os.getenv("OLLAMA_MODEL", "llama3.2")
     return base_url, "", model
 
@@ -77,7 +78,7 @@ async def chat_completions(request: ChatCompletionRequest) -> ChatCompletion:
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        await client.aclose()
+        await client.close()
 
 
 @router.post("/completions/stream")
@@ -89,24 +90,28 @@ async def chat_completions_stream(request: ChatCompletionRequest):
 
     client = create_client(base_url, api_key)
     try:
-        stream_generator = client.chat_completion(
+        stream_generator = await client.chat_completion(
             model=model,
             messages=messages,
             temperature=request.temperature,
             max_tokens=request.max_tokens,
             stream=True,
         )
+    except Exception as e:
+        await client.close()
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
-        async def event_stream():
+    async def event_stream():
+        # The route handler returns before the body runs; never close the httpx
+        # client in this function's outer finally or the stream uses a closed client.
+        try:
             async for chunk in stream_generator:
                 data = SSEHandler.format_chunk(
                     chunk.get("choices", [{}])[0].get("delta", {}).get("content", "")
                 )
                 yield data
             yield SSEHandler.format_chunk("", done=True)
+        finally:
+            await client.close()
 
-        return StreamingResponse(event_stream(), media_type="text/event-stream")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        await client.aclose()
+    return StreamingResponse(event_stream(), media_type="text/event-stream")

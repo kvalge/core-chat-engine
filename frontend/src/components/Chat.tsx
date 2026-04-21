@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect } from "react";
+import { streamingChatCompletion, ChatMessage } from "../services/api";
 
-interface Message {
+interface Message extends ChatMessage {
   id: number;
-  role: "user" | "assistant";
-  content: string;
 }
 
-export default function Chat() {
+interface ChatProps {
+  selectedProject?: number;
+}
+
+export default function Chat(_props: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,33 +33,50 @@ export default function Chat() {
     setInput("");
     setLoading(true);
 
-    try {
-      const response = await fetch("/v1/chat/completions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "llama3.2",
-          messages: [
-            ...messages.map((m) => ({ role: m.role, content: m.content })),
-            { role: "user", content: input },
-          ],
-          stream: false,
-        }),
-      });
+    // Initialize empty assistant message for streaming
+    const assistantId = Date.now() + 1;
+    setMessages((prev) => [...prev, { id: assistantId, role: "assistant", content: "" }]);
 
-      const data = await response.json();
-      const assistantMessage: Message = {
-        id: Date.now() + 1,
-        role: "assistant",
-        content: data.choices?.[0]?.message?.content || "Sorry, I didn't get a response.",
+    try {
+      const request = {
+        model: "llama3.2",
+        messages: [
+          ...messages.map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
+          { role: "user", content: input } as ChatMessage,
+        ],
       };
-      setMessages((prev) => [...prev, assistantMessage]);
+
+      // Use streaming endpoint
+      let fullContent = "";
+      for await (const chunk of streamingChatCompletion(request)) {
+        fullContent += chunk;
+        // Update the assistant message as content arrives
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId ? { ...msg, content: fullContent } : msg
+          )
+        );
+      }
+
+      // If no content was received, show fallback
+      if (!fullContent) {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? { ...msg, content: "Sorry, I didn't get a response." }
+              : msg
+          )
+        );
+      }
     } catch (error) {
       console.error("Error:", error);
-      setMessages((prev) => [
-        ...prev,
-        { id: Date.now() + 1, role: "assistant", content: "Error: Could not connect to chat." },
-      ]);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === assistantId
+            ? { ...msg, content: "Error: Could not connect to chat." }
+            : msg
+        )
+      );
     } finally {
       setLoading(false);
     }

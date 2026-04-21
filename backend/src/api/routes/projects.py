@@ -34,8 +34,9 @@ async def create_project(project: ProjectCreate, db: AsyncSession = Depends(get_
         name=project.name,
         system_prompt=project.system_prompt,
         default_model=project.default_model,
-        enabled_tools=project.enabled_tools,
     )
+    if project.enabled_tools:
+        db_project.enabled_tools_list = project.enabled_tools
     db.add(db_project)
     await db.commit()
     await db.refresh(db_project)

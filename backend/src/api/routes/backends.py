@@ -25,7 +25,7 @@ async def list_backends(db: AsyncSession = Depends(get_db)):
     """List all backends."""
     result = await db.execute(select(Backend).order_by(Backend.created_at.desc()))
     backends = result.scalars().all()
-    return [BackendResponse.model_validate(b) for b in backends]
+    return [BackendResponse.from_entity(b) for b in backends]
 
 
 @router.post("/backends", response_model=BackendResponse)
@@ -41,13 +41,14 @@ async def create_backend(backend: BackendCreate, db: AsyncSession = Depends(get_
         name=backend.name,
         base_url=backend.base_url,
         api_key=backend.api_key,
-        models=backend.models,
         is_default=backend.is_default,
     )
+    if backend.models:
+        db_backend.models_list = backend.models
     db.add(db_backend)
     await db.commit()
     await db.refresh(db_backend)
-    return BackendResponse.model_validate(db_backend)
+    return BackendResponse.from_entity(db_backend)
 
 
 @router.get("/backends/{backend_id}", response_model=BackendResponse)
@@ -57,7 +58,7 @@ async def get_backend(backend_id: int, db: AsyncSession = Depends(get_db)):
     backend = result.scalar_one_or_none()
     if not backend:
         raise HTTPException(status_code=404, detail="Backend not found")
-    return BackendResponse.model_validate(backend)
+    return BackendResponse.from_entity(backend)
 
 
 @router.put("/backends/{backend_id}", response_model=BackendResponse)
@@ -92,7 +93,7 @@ async def update_backend(
 
     await db.commit()
     await db.refresh(backend)
-    return BackendResponse.model_validate(backend)
+    return BackendResponse.from_entity(backend)
 
 
 @router.delete("/backends/{backend_id}")
@@ -125,4 +126,4 @@ async def test_backend(backend_id: int, db: AsyncSession = Depends(get_db)):
     except Exception as e:
         return BackendTestResponse(success=False, message=str(e), models=[])
     finally:
-        await client.aclose()
+        await client.close()
